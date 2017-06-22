@@ -27,6 +27,12 @@ def run():
     ob_speed = 7
     ob_w, ob_h = 100, 100
 
+    road_lines = [None] * 4
+    r_l_w, r_l_h = 30, 40
+    r_l_start_x = disp_w / 2 - r_l_w/2
+    r_l_start_y = None
+    line_dist = 30
+
     game_exit = False
 
     # Event handler loop
@@ -58,12 +64,16 @@ def run():
         y += y_change
         window.fill(white)
 
+
         objs(ob_start_x, ob_start_y, ob_w, ob_h, black)
         ob_start_y += ob_speed
         car(x, y)
 
         # collision check point
         if crash(x, y): game_exit = True
+
+        if ob_start_y > disp_h:
+            ob_start_y = 0 - ob_h
 
         pygame.display.update()  # or use .flip(), like a flipbook
         clock.tick(60)
@@ -72,6 +82,7 @@ def run():
 
 def objs(ob_x, ob_y, ob_w, ob_h, color):
     pygame.draw.rect(window, color, [ob_x, ob_y, ob_w, ob_h])
+    #pygame.draw.polygon(window, color, [[100, 100], [100, 500], [400, 500]], 2)
 
 
 def txt_objects(txt, font):
