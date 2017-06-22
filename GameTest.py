@@ -53,7 +53,7 @@ def run():
                     x_change = 0
                 elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     y_change = 0
-
+                    
         x += x_change
         y += y_change
         window.fill(white)
