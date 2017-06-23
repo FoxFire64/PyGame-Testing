@@ -22,13 +22,16 @@ def run():
     x_change, y_change = 0, 0
     car_change_amt = 5
 
-    ob_start_x = random.randrange(0, disp_w)
+    ob_w, ob_h = 60, 80
+    ob_start_x = random.randrange(0, disp_w - ob_w)
     ob_start_y = -600
     ob_speed = 7
-    ob_w, ob_h = 100, 100
+
+    y_list = range(disp_h, 0, (ob_h + 5) * -2)
+    road_coord = (disp_w / 2) - (ob_w / 2)
 
     game_exit = False
-
+    starting_msg_display()
     # Event handler loop
     while not game_exit:
         for event in pygame.event.get():
@@ -54,12 +57,17 @@ def run():
                 elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     y_change = 0
 
-        x += x_change
-        y += y_change
+        x, y = x + x_change, y + y_change
         window.fill(white)
 
-        objs(ob_start_x, ob_start_y, ob_w, ob_h, black)
-        ob_start_y += ob_speed
+        y_list = [y_coord + ob_speed for y_coord in y_list]
+
+        for y_coord in y_list:
+            # create the object at each coordinate in center of screen
+            draw_obj(road_coord, y_coord, ob_w, ob_h, black)
+
+        y_list = [0 - ob_h if y_coord > disp_h else y_coord for y_coord in y_list]
+
         car(x, y)
 
         # collision check point
@@ -70,8 +78,12 @@ def run():
     print("Thanks for playing!")
 
 
-def objs(ob_x, ob_y, ob_w, ob_h, color):
-    pygame.draw.rect(window, color, [ob_x, ob_y, ob_w, ob_h])
+def draw_road():
+    return None  # TODO : create something here
+
+
+def draw_obj(coord_x, ob_y, ob_w, ob_h, color):
+    pygame.draw.rect(window, color, [coord_x, ob_y, ob_w, ob_h])
 
 
 def txt_objects(txt, font):
@@ -79,13 +91,25 @@ def txt_objects(txt, font):
     return txt_surface, txt_surface.get_rect()
 
 
-def msg_display(txt):
-    large_txt = pygame.font.Font('freesansbold.ttf', 115)
+def starting_msg_display():
+    msg_display("Starting Game in...", 80)
+    msg_display("3..", 80)
+    msg_display("2..", 80)
+    msg_display("1..", 80)
 
-    txt_surface, txt_cont = txt_objects(txt, large_txt)
+
+def msg_display(txt, size):
+    window.fill(white)
+    formatting = pygame.font.Font('freesansbold.ttf', size)
+
+    txt_surface, txt_cont = txt_objects(txt, formatting)
     txt_cont.center = ((disp_w / 2), (disp_h / 2))
     window.blit(txt_surface, txt_cont)
     pygame.display.update()
+    time.sleep(1)
+
+
+def restart():
     time.sleep(2)
 
     run()
@@ -96,26 +120,30 @@ def crash(x, y):
         window.fill(white)
         car(0, y)
         pygame.display.update()
-        msg_display("You crashed")
+        msg_display("You crashed", 80)
+        restart()
         return True
     elif x > disp_w - car_w:
         window.fill(white)
         car((disp_w - car_w), y)
         pygame.display.update()
-        msg_display("You crashed")
+        msg_display("You crashed", 80)
+        restart()
         return True
 
     if y < 0:
         window.fill(white)
         car(x, 0)
         pygame.display.update()
-        msg_display("You crashed")
+        msg_display("You crashed", 80)
+        restart()
         return True
     elif y > disp_h - car_h:
         window.fill(white)
         car(x, (disp_h - car_h))
         pygame.display.update()
-        msg_display("You crashed")
+        msg_display("You crashed", 80)
+        restart()
         return True
 
 
