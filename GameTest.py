@@ -58,6 +58,9 @@ def run():
                     y_change = 0
 
         x, y = x + x_change, y + y_change
+                    
+        x += x_change
+        y += y_change
         window.fill(white)
 
         y_list = [y_coord + ob_speed for y_coord in y_list]
@@ -71,7 +74,8 @@ def run():
         car(x, y)
 
         # collision check point
-        if crash(x, y): game_exit = True
+        if crash(x, y):
+            game_exit = True
 
         pygame.display.update()  # or use .flip(), like a flipbook
         clock.tick(60)
@@ -79,7 +83,7 @@ def run():
 
 
 def draw_road():
-    return None  # TODO : create something here
+    return None  # TODO : encapsulate road drawing here instead of run()
 
 
 def draw_obj(coord_x, ob_y, ob_w, ob_h, color):
@@ -96,6 +100,7 @@ def starting_msg_display():
     msg_display("3..", 80)
     msg_display("2..", 80)
     msg_display("1..", 80)
+
 
 
 def msg_display(txt, size):
@@ -121,6 +126,8 @@ def crash(x, y):
         car(0, y)
         pygame.display.update()
         msg_display("You crashed", 80)
+        pygame.mixer.Sound("water.wav").play()
+        time.sleep(6)
         restart()
         return True
     elif x > disp_w - car_w:
@@ -128,6 +135,8 @@ def crash(x, y):
         car((disp_w - car_w), y)
         pygame.display.update()
         msg_display("You crashed", 80)
+        pygame.mixer.Sound("water.wav").play()
+        time.sleep(6)
         restart()
         return True
 
@@ -136,6 +145,8 @@ def crash(x, y):
         car(x, 0)
         pygame.display.update()
         msg_display("You crashed", 80)
+        pygame.mixer.Sound("water.wav").play()
+        time.sleep(6)
         restart()
         return True
     elif y > disp_h - car_h:
@@ -143,6 +154,8 @@ def crash(x, y):
         car(x, (disp_h - car_h))
         pygame.display.update()
         msg_display("You crashed", 80)
+        pygame.mixer.Sound("water.wav").play()
+        time.sleep(6)
         restart()
         return True
 
