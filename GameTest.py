@@ -22,21 +22,11 @@ def run():
     x_change, y_change = 0, 0
     car_change_amt = 5
 
-    ob_w, ob_h = 60, 80
-    ob_start_x = random.randrange(0, disp_w - ob_w)
-    ob_start_y = -600
-    ob_speed = 7
+    street_mark_w, street_mark_h = disp_h/10, disp_w/10
+    street_mark_speed = 7
 
-    road_lines = [None] * 4
-    r_l_w, r_l_h = 30, 40
-    r_l_start_x = disp_w / 2 - r_l_w / 2
-    r_l_start_y = None
-    line_dist = 30
-
-    game_exit = False
-
-    y_list = range(disp_h, 0, (ob_h + 5) * -2)
-    road_coord = (disp_w / 2) - (ob_w / 2)
+    y_list = range(disp_h, 0, (street_mark_h + 5) * -2)
+    road_coord = (disp_w / 2) - (street_mark_w / 2)
 
     game_exit = False
     starting_msg_display()
@@ -71,25 +61,19 @@ def run():
         y += y_change
         window.fill(white)
 
-        #objs(ob_start_x, ob_start_y, ob_w, ob_h, black)
-        #ob_start_y += ob_speed
-
-        y_list = [y_coord + ob_speed for y_coord in y_list]
+        y_list = [y_coord + street_mark_speed for y_coord in y_list]
 
         for y_coord in y_list:
-            # create the object at each coordinate in center of screen
-            draw_obj(road_coord, y_coord, ob_w, ob_h, black)
+            # create the object at each coordinate in center of screen (initially), modify from there
+            draw_street_mark(road_coord, y_coord, street_mark_w, street_mark_h, black)
 
-        y_list = [0 - ob_h if y_coord > disp_h else y_coord for y_coord in y_list]
+        y_list = [0 - street_mark_h if y_coord > disp_h else y_coord for y_coord in y_list]
 
         car(x, y)
 
         # collision check point
         if crash(x, y):
             game_exit = True
-
-        if ob_start_y > disp_h:
-            ob_start_y = 0 - ob_h
 
         pygame.display.update()  # or use .flip(), like a flipbook
         clock.tick(60)
@@ -98,14 +82,14 @@ def run():
 
 def objs(ob_x, ob_y, ob_w, ob_h, color):
     pygame.draw.rect(window, color, [ob_x, ob_y, ob_w, ob_h])
-    # pygame.draw.polygon(window, color, [[100, 100], [100, 500], [400, 500]], 2)
+    pygame.draw.polygon(window, color, [[100, 100], [100, 500], [400, 500]], 2)
 
 
 def draw_road():
     return None  # TODO : encapsulate road drawing here instead of run()
 
 
-def draw_obj(coord_x, ob_y, ob_w, ob_h, color):
+def draw_street_mark(coord_x, ob_y, ob_w, ob_h, color):
     pygame.draw.rect(window, color, [coord_x, ob_y, ob_w, ob_h])
 
 
@@ -132,6 +116,9 @@ def msg_display(txt, size):
     if txt != "You crashed":
         time.sleep(1)
 
+def pause():
+    return None     # TODO: create screen overlay that preserves underlying screen
+                    # TODO: add in resume and quit options with keyboard and mouse parameters
 
 def restart():
     time.sleep(2)
