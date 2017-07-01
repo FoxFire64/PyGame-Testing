@@ -12,20 +12,19 @@ def init():
            pygame.time.Clock()
 
 
-def car(x, y):
+def draw_car(x, y):
     window.blit(car_img, (x, y))
 
 
 def run():
-    x = (disp_w * 0.45)
-    y = (disp_h * 0.8)
+    x,y = (disp_w * 0.45), (disp_h * 0.8)
     x_change, y_change = 0, 0
     car_change_amt = 5
 
-    street_mark_w, street_mark_h = disp_h/10, disp_w/10
+    street_mark_w, street_mark_h = disp_h / 10, disp_w / 10
     street_mark_speed = 7
 
-    y_list = range(disp_h, 0, (street_mark_h + 5) * -2)
+    y_list = range(disp_h, 0, int(street_mark_h + 5) * -2)
     road_coord = (disp_w / 2) - (street_mark_w / 2)
 
     game_exit = False
@@ -48,6 +47,8 @@ def run():
                     y_change = -car_change_amt
                 elif event.key == pygame.K_DOWN:
                     y_change = car_change_amt
+                elif event.key == pygame.K_p:
+                    pause()
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -69,7 +70,7 @@ def run():
 
         y_list = [0 - street_mark_h if y_coord > disp_h else y_coord for y_coord in y_list]
 
-        car(x, y)
+        draw_car(x, y)
 
         # collision check point
         if crash(x, y):
@@ -82,7 +83,7 @@ def run():
 
 def objs(ob_x, ob_y, ob_w, ob_h, color):
     pygame.draw.rect(window, color, [ob_x, ob_y, ob_w, ob_h])
-    pygame.draw.polygon(window, color, [[100, 100], [100, 500], [400, 500]], 2)
+    #pygame.draw.polygon(window, color, [[100, 100], [100, 500], [400, 500]], 2)
 
 
 def draw_road():
@@ -116,9 +117,12 @@ def msg_display(txt, size):
     if txt != "You crashed":
         time.sleep(1)
 
+
 def pause():
-    return None     # TODO: create screen overlay that preserves underlying screen
-                    # TODO: add in resume and quit options with keyboard and mouse parameters
+    return None
+    # TODO: create screen overlay that preserves underlying screen
+    # TODO: add in resume and quit options with keyboard and mouse parameters
+
 
 def restart():
     time.sleep(2)
@@ -129,7 +133,7 @@ def restart():
 def crash(x, y):
     if x < 0:
         window.fill(white)
-        car(0, y)
+        draw_car(0, y)
         pygame.display.update()
         msg_display("You crashed", 80)
         pygame.mixer.Sound("water.wav").play()
@@ -138,7 +142,7 @@ def crash(x, y):
         return True
     elif x > disp_w - car_w:
         window.fill(white)
-        car((disp_w - car_w), y)
+        draw_car((disp_w - car_w), y)
         pygame.display.update()
         msg_display("You crashed", 80)
         pygame.mixer.Sound("water.wav").play()
@@ -148,7 +152,7 @@ def crash(x, y):
 
     if y < 0:
         window.fill(white)
-        car(x, 0)
+        draw_car(x, 0)
         pygame.display.update()
         msg_display("You crashed", 80)
         pygame.mixer.Sound("water.wav").play()
@@ -157,7 +161,7 @@ def crash(x, y):
         return True
     elif y > disp_h - car_h:
         window.fill(white)
-        car(x, (disp_h - car_h))
+        draw_car(x, (disp_h - car_h))
         pygame.display.update()
         msg_display("You crashed", 80)
         pygame.mixer.Sound("water.wav").play()
