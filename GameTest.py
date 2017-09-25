@@ -101,10 +101,8 @@ def txt_objects(txt, font):
 
 def starting_msg_display():
     msg_display("Starting Game in...", 80)
-    msg_display("3..", 80)
-    msg_display("2..", 80)
-    msg_display("1..", 80)
-
+    for i in reversed(range(1, 4)):
+		msg_display("{}..".format(i), 80)
 
 def msg_display(txt, size):
     window.fill(white)
@@ -126,7 +124,6 @@ def pause():
 
 def restart():
     time.sleep(2)
-
     run()
 
 
@@ -134,41 +131,26 @@ def crash(x, y):
     if x < 0:
         window.fill(white)
         draw_car(0, y)
-        pygame.display.update()
-        msg_display("You crashed", 80)
-        pygame.mixer.Sound("water.wav").play()
-        time.sleep(6)
-        restart()
-        return True
     elif x > disp_w - car_w:
         window.fill(white)
         draw_car((disp_w - car_w), y)
-        pygame.display.update()
-        msg_display("You crashed", 80)
-        pygame.mixer.Sound("water.wav").play()
-        time.sleep(6)
-        restart()
-        return True
-
     if y < 0:
         window.fill(white)
         draw_car(x, 0)
-        pygame.display.update()
-        msg_display("You crashed", 80)
-        pygame.mixer.Sound("water.wav").play()
-        time.sleep(6)
-        restart()
-        return True
     elif y > disp_h - car_h:
         window.fill(white)
         draw_car(x, (disp_h - car_h))
-        pygame.display.update()
-        msg_display("You crashed", 80)
-        pygame.mixer.Sound("water.wav").play()
-        time.sleep(6)
-        restart()
-        return True
+	
+	outtro()	
 
+def outtro():
+	pygame.display.update()
+	msg_display("You crashed", 80)
+	pygame.mixer.Sound("water.wav").play()
+	time.sleep(6)
+	restart()
+	return True
+    
 
 if __name__ == '__main__':
     disp_w, disp_h = 800, 600
